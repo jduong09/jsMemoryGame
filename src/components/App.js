@@ -19,17 +19,25 @@ const App = () => {
   // Leave dependency array empty, similar to componentDidMount
   // Means the hook runs one time when the component mounts.
   React.useEffect(() => {
-    const copyArr = pokemonData;
-    async function fetchPokemon() {
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/1`);
+    async function fetchPokemon(id) {
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
       if (response.ok) {
         return response.json();
       }
     }
     (async function() {
-      const pokemon = await fetchPokemon();
-      copyArr.push(pokemon.name);
-      setPokemonData(copyArr);
+      const newArr = [];
+      for (let i = 1; i <= 10; i++) {
+        const pokemon = await fetchPokemon(i);
+        const name = pokemon.name;
+        const imgUrl = pokemon.sprites.front_default;
+        newArr.push({
+          id: i,
+          name: name,
+          imgUrl: imgUrl
+        });
+      }
+      setPokemonData(pokemonData.concat(newArr));
     })();
     // Make api call to pokemon api, retreive 20 pokemon names and images.
   }, []);
