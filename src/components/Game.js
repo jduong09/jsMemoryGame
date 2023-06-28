@@ -1,13 +1,11 @@
 import React from 'react';
 import Card from './Card';
 
-const Game = ({ pokemonData }) => {
-  const [score, setScore] = React.useState(0);
+const Game = ({ pokemonData, resetGame }) => {
   const [cards, setCards] = React.useState([]);
   const [cardsMatched, setCardsMatched] = React.useState(10);
   const [chosenCardIdx, setChosenCardIdx] = React.useState('');
 
-  // Create 20 divs and then populate them randomly with the url and name.
   React.useEffect(() => {
     const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 
@@ -30,10 +28,13 @@ const Game = ({ pokemonData }) => {
   }, [pokemonData]);
 
   React.useEffect(() => {
+    const divGameOver = document.getElementById('div-game-over');
     if (cardsMatched === 0) {
       console.log('Game Over');
+      divGameOver.classList.remove('hide');
+      setCardsMatched(10);
     }
-  }, [cardsMatched])
+  }, [cardsMatched]);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -68,7 +69,6 @@ const Game = ({ pokemonData }) => {
 
   const handleGameStart = (e) => {
     e.preventDefault();
-
     hideCards();
   }
 
@@ -78,11 +78,14 @@ const Game = ({ pokemonData }) => {
 
   return (
     <div id="div-game">
-      Current Score: {score}
       <button onClick={handleGameStart}>Play Game</button>
       <ul id="list-cards">
         {listOfCards}
       </ul>
+      <div id="div-game-over" className="hide">
+        <h2>Game Over!</h2>
+        <button onClick={resetGame}>Play Again</button>
+      </div>
     </div>
   )
 }
@@ -106,20 +109,3 @@ const hideCards = () => {
 }
 
 export default Game;
-
-/* 
-Game starts by showing all the cards and their locations.
-Player clicks button 'Play Game'
-All cards are flipped over (flip card animation) and their faces are hidden
-Game waits for player to click one card.
-  // On Click, card is flipped and face is revealed.
-Game waits for player to click second card
-  // On Click, card is flipped and face is revealed
-  // If Both cards match, dataset-name
-    // cards stay flipped 
-  // If both cards do not math
-    // cards are flipped, face is hidden
-Game ends when all cards are revealed
-Game's scoring is based on time it took to flip all cards
-Game's scoring is based on how many turns it took to flip all cards.
-*/
