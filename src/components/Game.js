@@ -5,6 +5,7 @@ const Game = ({ pokemonData, resetGame }) => {
   const [cards, setCards] = React.useState([]);
   const [cardsMatched, setCardsMatched] = React.useState(10);
   const [chosenCardIdx, setChosenCardIdx] = React.useState('');
+  const [turns, setTurns] = React.useState(0);
 
   React.useEffect(() => {
     const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
@@ -30,9 +31,9 @@ const Game = ({ pokemonData, resetGame }) => {
   React.useEffect(() => {
     const divGameOver = document.getElementById('div-game-over');
     if (cardsMatched === 0) {
-      console.log('Game Over');
       divGameOver.classList.remove('hide');
       setCardsMatched(10);
+      setTurns(0);
     }
   }, [cardsMatched]);
 
@@ -41,7 +42,6 @@ const Game = ({ pokemonData, resetGame }) => {
     const currentChosenCard = e.currentTarget;
     const cardIdx = e.currentTarget.getAttribute('data-idx');
     const pokemonName = e.currentTarget.getAttribute('data-name');
-    console.log(e.currentTarget);
 
     currentChosenCard.classList.remove('hidden');
 
@@ -51,19 +51,22 @@ const Game = ({ pokemonData, resetGame }) => {
       const previousChosenCard = document.querySelector(`div[data-idx="${chosenCardIdx}"]`);
       const previousChosenCardName = previousChosenCard.getAttribute('data-name');
       if (pokemonName === previousChosenCardName) {
-        console.log('Match');
+        currentChosenCard.parentElement.classList.add('matched');
+        previousChosenCard.parentElement.classList.add('matched');
         previousChosenCard.classList.remove('hidden');
         setCardsMatched(cardsMatched - 1);
       } else {
-        console.log('No Match');
+        currentChosenCard.parentElement.classList.add('nonmatched');
+        previousChosenCard.parentElement.classList.add('nonmatched');
         setTimeout(() => {
-          console.log(e.currentTarget);
           currentChosenCard.classList.add('hidden');
-          console.log(previousChosenCard);
           previousChosenCard.classList.add('hidden');
-        }, 2500);
+          currentChosenCard.parentElement.classList.remove('nonmatched');
+          previousChosenCard.parentElement.classList.remove('nonmatched')
+        }, 2000);
       }
       setChosenCardIdx('');
+      setTurns(turns + 1);
     }
   }
 
@@ -78,28 +81,32 @@ const Game = ({ pokemonData, resetGame }) => {
 
   return (
     <div id="div-game">
-      <button onClick={handleGameStart}>Play Game</button>
+      <button id="btn-game-start" onClick={handleGameStart}>Play Game</button>
       <ul id="list-cards">
         {listOfCards}
       </ul>
       <div id="div-game-over" className="hide">
         <h2>Game Over!</h2>
-        <button onClick={resetGame}>Play Again</button>
+        <div>{`You won in ${turns} turns!`}</div>
+        <button id="btn-reset" onClick={resetGame}>Play Again</button>
       </div>
     </div>
   )
 }
 
-function randomIntFromInterval(min, max) { // min and max included 
+function randomIntFromInterval(min, max) {
+  // min and max included 
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+/*
 const revealCards = () => {
   const cards = document.querySelectorAll('.card > div');
   for (let i = 0; i < cards.length; i++) {
     cards[i].classList.remove('hidden');
   }
 }
+*/
 
 const hideCards = () => {
   const cards = document.querySelectorAll('.card > div');

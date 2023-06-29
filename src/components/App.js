@@ -57,6 +57,7 @@ const App = () => {
 
   return (
     <div className="App">
+      <h1>Memory Game: Pokémon Edition</h1>
       <Game pokemonData={pokemonData} resetGame={resetGame} />
     </div>
   );
