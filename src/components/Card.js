@@ -5,7 +5,7 @@ const Card = ({ cardIdx, name, imgUrl, hide, handleClick }) => {
     <li className="card">
       <div data-idx={cardIdx} data-name={name} onClick={handleClick}>
         <h2 className={hide === 'name' ? 'hide' : ''}>{name.toUpperCase()}</h2>
-        <img id={`img-${name}`} className={hide === 'name' ? '' : 'hide'} src={imgUrl} alt={`${name} pokemon`} />
+        <img id={`img-${name}`} className={hide === 'name' ? '' : 'hide'} src={imgUrl} alt={`${name} pokemon`} onDragStart={(e) => { e.preventDefault() }} />
       </div>
     </li>
   )
