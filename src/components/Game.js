@@ -33,7 +33,6 @@ const Game = ({ pokemonData, resetGame }) => {
     if (cardsMatched === 0) {
       divGameOver.classList.remove('hide');
       setCardsMatched(10);
-      setTurns(0);
     }
   }, [cardsMatched]);
 
@@ -73,6 +72,7 @@ const Game = ({ pokemonData, resetGame }) => {
   const handleGameStart = (e) => {
     e.preventDefault();
     hideCards();
+    setTurns(0);
   }
 
   const listOfCards = cards.map((data, idx) => {
